@@ -1,0 +1,20 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" 
+         xmlns:d="jelly:define" xmlns:l="/lib/layout" 
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<st:once>
+      <script type="text/javascript" src="${rootURL}/plugin/xslan/scripts/xslan-behavior.js"></script>
+    </st:once>
+    <f:entry title="${%XSL file path}"
+    	description="${%relative path to project root.}">
+		<input class="setting-input" name="xslan.xslFile" type="text" value="${instance.xslFile}"/>
+    </f:entry>
+    
+    <f:entry title="${%XML file path}" description="${%relative path to project root.}">             
+		<input class="setting-input" name="xslan.xmlFile" type="text" value="${instance.xmlFile}"/>
+    </f:entry>
+    
+    <f:entry title="${%OUT file path}" description="${%relative path to project root.}">             
+		<input class="setting-input" name="xslan.outFile" type="text" value="${instance.outFile}"/>
+		<input name="xslan.isOutToEmailExt" type="checkbox" checked="${instance.isOutToEmailExt}"> output to email ext.</input>
+    </f:entry>
+</j:jelly>
