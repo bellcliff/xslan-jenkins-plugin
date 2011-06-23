@@ -29,10 +29,13 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class XslanPublisher extends Notifier {
 	@DataBoundConstructor
-	public XslanPublisher(String xslFile, String xmlFile, String outFile) {
+	public XslanPublisher(String xslFile, String xmlFile, String outFile,
+			boolean isOutToEmailExt) {
 		this.xslFile = xslFile;
 		this.xmlFile = xmlFile;
 		this.outFile = outFile;
+		// 增加参数存储解决该属性不变问题
+		this.isOutToEmailExt = isOutToEmailExt;
 	}
 
 	private static final Logger LOGGER = Logger.getLogger(XslanPublisher.class
@@ -55,7 +58,8 @@ public class XslanPublisher extends Notifier {
 	public String getOutFile() {
 		return outFile;
 	}
-	public boolean getIsOutToEmailExt(){
+
+	public boolean getIsOutToEmailExt() {
 		return isOutToEmailExt;
 	}
 
@@ -66,7 +70,7 @@ public class XslanPublisher extends Notifier {
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher,
 			BuildListener listener) throws InterruptedException, IOException {
-		
+
 		LOGGER.log(Level.INFO, "perform xsl execute");
 		if (xslFile == null || xmlFile == null || outFile == null) {
 			LOGGER.log(Level.INFO, "not set for xsl, xml or out file");
@@ -74,12 +78,20 @@ public class XslanPublisher extends Notifier {
 		}
 
 		try {
+			// 文件不存在时会抛空指针异常，增加校验逻辑
+			if (!build.getWorkspace().child(xslFile).exists()
+					|| !build.getWorkspace().child(xmlFile).exists()) {
+				LOGGER.info("xsl or xml not exist");
+				return true;
+			}
+
 			StreamSource xsl = new StreamSource(build.getWorkspace()
 					.child(xslFile).read());
 			StreamSource xml = new StreamSource(build.getWorkspace()
 					.child(xmlFile).read());
 			StreamResult out = new StreamResult(build.getWorkspace()
 					.child(outFile).write());
+
 			TransformerFactory.newInstance().newTransformer(xsl)
 					.transform(xml, out);
 		} catch (TransformerConfigurationException e) {

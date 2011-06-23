@@ -14,7 +14,8 @@
     </f:entry>
     
     <f:entry title="${%OUT file path}" description="${%relative path to project root.}">             
-		<input class="setting-input" name="xslan.outFile" type="text" value="${instance.outFile}"/>
-		<input name="xslan.isOutToEmailExt" type="checkbox" checked="${instance.isOutToEmailExt}"> output to email ext.</input>
+		<input class="setting-input" name="xslan.outFile" type="text" value="${instance.outFile}" />
+		<f:checkbox name="xslan.isOutToEmailExt" checked="${instance.isOutToEmailExt}" />
+		<span>Fill output path field with content set in email-ext plugin</span>
     </f:entry>
 </j:jelly>
